@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain": [
+        "fengkongcloud.com",
+        "xhscdn.com",
+        "xhscdn.net",
+        "xiaohongshu.com"
+      ],
+      "domain_suffix": [
+        ".fengkongcloud.com",
+        ".xhscdn.com",
+        ".xhscdn.net",
+        ".xiaohongshu.com"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain": [
+        "p-cdn.us",
+        "pandora.com"
+      ],
+      "domain_suffix": [
+        ".p-cdn.us",
+        ".pandora.com"
+      ]
+    }
+  ]
+}
