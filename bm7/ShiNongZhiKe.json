@@ -1,0 +1,17 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain": [
+        "senseagro.cn",
+        "senseagro.com",
+        "senseagro.com.cn"
+      ],
+      "domain_suffix": [
+        ".senseagro.cn",
+        ".senseagro.com",
+        ".senseagro.com.cn"
+      ]
+    }
+  ]
+}
