@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain": [
+        "qyyjt.cn"
+      ],
+      "domain_suffix": [
+        ".qyyjt.cn"
+      ]
+    }
+  ]
+}
