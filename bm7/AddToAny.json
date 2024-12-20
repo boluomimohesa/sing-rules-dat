@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain": [
+        "addtoany.com"
+      ],
+      "domain_suffix": [
+        ".addtoany.com"
+      ]
+    }
+  ]
+}
