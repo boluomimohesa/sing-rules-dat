@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "rules": [
+    {
+      "domain": [
+        "anandtech.com"
+      ],
+      "domain_suffix": [
+        ".anandtech.com"
+      ]
+    }
+  ]
+}
