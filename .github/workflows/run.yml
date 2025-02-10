@@ -53,21 +53,22 @@ jobs:
           curl -sSL ${{ env.bm7Base }}/OpenAI/OpenAI.yaml | ${{ env.sed }} > ./data-lite/openai
           curl -sSL ${{ env.bm7Base }}/Gemini/Gemini.yaml | ${{ env.sed }} > ./data-lite/gemini
 
-          go run ./ --datapath=./data-lite --outputname geosite-lite.dat
+          go run ./ --datapath=./data-lite --outputname bm7.dat
       
 
       - name: Convert geo-lite to sing-rule-set
         env:
           NO_SKIP: true
         run: |
-          mkdir -p sing-rule/geo-lite/geosite
+          mkdir -p sing-rule/bm7
           cd convert || exit 1
-          go run ./ geosite -f ../community/geosite-lite.dat -o ../sing-rule/geo-lite/geosite -t sing-box
+          go run ./ geosite -f ../community/bm7.dat -o ../sing-rule/bm7 -t sing-box
+          rm -rf ../community/bm7.dat
       
       - name: Merge ai file
         run: |
           sudo apt-get install -y moreutils
-          cd sing-rule/geo-lite/geosite || exit 1
+          cd sing-rule/bm7 || exit 1
           wget https://github.com/SagerNet/sing-box/releases/download/v1.11.1/sing-box-1.11.1-linux-amd64.tar.gz -O singbox.tar.gz
           tar --strip-components=1 -xzvf singbox.tar.gz -C ./ --wildcards "*/sing-box"
           chmod 755 ./sing-box
