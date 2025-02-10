@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Set variables
         run: |
-          echo "GOAMD64=v3" >> $GITHUB_ENV
+          echo "GOAMD64=v4" >> $GITHUB_ENV
           echo "BUILDTIME=$(TZ=Asia/Shanghai date +'%Y-%m-%d %H:%M')" >> $GITHUB_ENV
         shell: bash
 
@@ -54,6 +54,7 @@ jobs:
           curl -sSL ${{ env.bm7Base }}/Gemini/Gemini.yaml | ${{ env.sed }} > ./data-lite/gemini
 
           go run ./ --datapath=./data-lite --outputname geosite-lite.dat
+      
 
       - name: Convert geo-lite to sing-rule-set
         env:
@@ -62,6 +63,18 @@ jobs:
           mkdir -p sing-rule/geo-lite/geosite
           cd convert || exit 1
           go run ./ geosite -f ../community/geosite-lite.dat -o ../sing-rule/geo-lite/geosite -t sing-box
+      
+      - name: Merge ai file
+        run: |
+          sudo apt-get install -y moreutils
+          cd sing-rule/geo-lite/geosite || exit 1
+          wget https://github.com/SagerNet/sing-box/releases/download/v1.11.1/sing-box-1.11.1-linux-amd64.tar.gz -O singbox.tar.gz
+          tar --strip-components=1 -xzvf singbox.tar.gz -C ./ --wildcards "*/sing-box"
+          chmod 755 ./sing-box
+          ./sing-box rule-set merge ./ai.json -c claude.json -c gemini.json -c openai.json
+          jq  '.version = 2' ./ai.json | sponge ./ai.json
+          # jq  '.version = 2' ./ai.json > tmp.json && mv ./tmp.json ./ai.json
+          rm -rf ./*linux-amd64.tar.gz ./sing-box
       
       - name: Git push assets to "sing-rule" branch
         run: |
