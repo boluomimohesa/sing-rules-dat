@@ -27,10 +27,19 @@ jobs:
           repository: v2fly/domain-list-community
           path: community
 
+      - name: Checkout MetaCubeX/meta-rules-converter
+        uses: actions/checkout@v4
+        with:
+          repository: MetaCubeX/meta-rules-converter
+          path: convert
+
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
           go-version: '1.22'
+          cache-dependency-path: |
+            community/go.sum
+            convert/go.sum
       
       - name: Build geosite-lite.dat file
         env:
