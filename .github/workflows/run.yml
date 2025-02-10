@@ -10,26 +10,49 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Set variables
+        run: |
+          echo "GOAMD64=v3" >> $GITHUB_ENV
+          echo "BUILDTIME=$(TZ=Asia/Shanghai date +'%Y-%m-%d %H:%M')" >> $GITHUB_ENV
+        shell: bash
+
       - name: Checkout
         uses: actions/checkout@v4
         with:
           repository: boluomimohesa/sing-rules-dat
+
+      - name: Checkout v2fly/domain-list-community
+        uses: actions/checkout@v4
+        with:
+          repository: v2fly/domain-list-community
+          path: community
 
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
           go-version: '1.22'
       
-      - name: Convert bm7-rule-set to sing-rule-set
+      - name: Build geosite-lite.dat file
+        env:
+          sed: grep "DOMAIN" | grep -v "#" | sed -E "s/  - DOMAIN,/full:/g; s/  - DOMAIN-SUFFIX,//g; s/  - DOMAIN-KEYWORD,/keyword:/g" 
+          bm7Base: "https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rule/Clash"
         run: |
-          mkdir -p ./sing-rule/bm7
-          cp ./resouces/bm7.sh ./sing-rule/bm7/
-          cd ./sing-rule/bm7
-          
-          wget https://github.com/SagerNet/sing-box/releases/download/v1.10.0/sing-box-1.10.0-linux-amd64.tar.gz -O sing-box.tar.gz && tar zxvf sing-box.tar.gz && mv sing-box-1.10.0-linux-amd64/sing-box ./ && rm -r sing-box-1.10.0-linux-amd64
-          ls
-          chmod 755 bm7.sh && ./bm7.sh
-          rm -r bm7.sh sing-box* rule
+          cd community || exit 1
+          mkdir -p data-lite
+
+          curl -sSL ${{ env.bm7Base }}/Claude/Claude.yaml | ${{ env.sed }} > ./data-lite/claude
+          curl -sSL ${{ env.bm7Base }}/OpenAI/OpenAI.yaml | ${{ env.sed }} > ./data-lite/openai
+          curl -sSL ${{ env.bm7Base }}/Gemini/Gemini.yaml | ${{ env.sed }} > ./data-lite/gemini
+
+          go run ./ --datapath=./data-lite --outputname geosite-lite.dat
+
+      - name: Convert geo-lite to sing-rule-set
+        env:
+          NO_SKIP: true
+        run: |
+          mkdir -p sing-rule/geo-lite/geosite
+          cd convert || exit 1
+          go run ./ geosite -f ../community/geosite-lite.dat -o ../sing-rule/geo-lite/geosite -t sing-box
       
       - name: Git push assets to "sing-rule" branch
         run: |
