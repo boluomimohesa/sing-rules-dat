@@ -71,7 +71,10 @@ jobs:
           wget https://github.com/SagerNet/sing-box/releases/download/v1.11.1/sing-box-1.11.1-linux-amd64.tar.gz -O singbox.tar.gz
           tar --strip-components=1 -xzvf singbox.tar.gz -C ./ --wildcards "*/sing-box"
           chmod 755 ./sing-box
+
           ./sing-box rule-set merge ./ai.json -c claude.json -c gemini.json -c openai.json
+          ./sing-box rule-set compile ./ai.json
+
           jq  '.version = 2' ./ai.json | sponge ./ai.json
           # jq  '.version = 2' ./ai.json > tmp.json && mv ./tmp.json ./ai.json
           rm -rf ./*linux-amd64.tar.gz ./sing-box
