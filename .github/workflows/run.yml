@@ -69,7 +69,7 @@ jobs:
         run: |
           sudo apt-get install -y moreutils
           cd sing-rule/bm7 || exit 1
-          wget https://github.com/SagerNet/sing-box/releases/download/v1.11.1/sing-box-1.11.1-linux-amd64.tar.gz -O singbox.tar.gz
+          wget https://github.com/SagerNet/sing-box/releases/download/v1.11.1/sing-box-1.11.1-linux-amd64.tar.gz -O sing-box.tar.gz
           tar --strip-components=1 -xzvf singbox.tar.gz -C ./ --wildcards "*/sing-box"
           chmod 755 ./sing-box
 
