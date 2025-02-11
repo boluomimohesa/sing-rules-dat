@@ -62,17 +62,19 @@ jobs:
       
       - name: Merge ai file
         run: |
-          sudo apt-get install -y moreutils
           cd sing-rule/bm7 || exit 1
           wget https://github.com/SagerNet/sing-box/releases/download/v1.11.1/sing-box-1.11.1-linux-amd64.tar.gz -O sing-box.tar.gz
-          tar --strip-components=1 -xzvf singbox.tar.gz -C ./ --wildcards "*/sing-box"
+          tar --strip-components=1 -xzf sing-box.tar.gz -C ./ --wildcards "*/sing-box"
           chmod 755 ./sing-box
-
+          
           ./sing-box rule-set merge ./ai.json -c claude.json -c gemini.json -c openai.json
-          jq  '.version = 2' ./ai.json | sponge ./ai.json
+          
+          # sudo apt-get install -y moreutils
+          # jq  '.version = 2' ./ai.json | sponge ./ai.json
+          jq  '.version = 2' ./ai.json > tmp.json && mv ./tmp.json ./ai.json
+          
           ./sing-box rule-set compile ./ai.json
 
-          # jq  '.version = 2' ./ai.json > tmp.json && mv ./tmp.json ./ai.json
           rm -rf ./*linux-amd64.tar.gz ./sing-box*
       
       - name: Git push assets to "sing-rule" branch
