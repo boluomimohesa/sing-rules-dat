@@ -78,7 +78,7 @@ jobs:
           ./sing-box rule-set compile ./ai.json
 
           # jq  '.version = 2' ./ai.json > tmp.json && mv ./tmp.json ./ai.json
-          rm -rf ./*linux-amd64.tar.gz ./sing-box
+          rm -rf ./*linux-amd64.tar.gz ./sing-box*
       
       - name: Git push assets to "sing-rule" branch
         run: |
