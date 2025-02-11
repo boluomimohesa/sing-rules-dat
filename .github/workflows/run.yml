@@ -15,12 +15,7 @@ jobs:
           echo "GOAMD64=v3" >> $GITHUB_ENV
           echo "BUILDTIME=$(TZ=Asia/Shanghai date +'%Y-%m-%d %H:%M')" >> $GITHUB_ENV
         shell: bash
-
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          repository: boluomimohesa/sing-rules-dat
-
+        
       - name: Checkout v2fly/domain-list-community
         uses: actions/checkout@v4
         with:
