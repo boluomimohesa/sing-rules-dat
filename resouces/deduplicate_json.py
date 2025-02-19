@@ -123,4 +123,4 @@ def main():
     remove_duplicates(input_file, output_file)
 
 if __name__ == "__main__":
-    main()ain()
+    main()
