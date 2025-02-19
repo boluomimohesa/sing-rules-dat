@@ -48,6 +48,16 @@ jobs:
           curl -sSL ${{ env.bm7Base }}/Claude/Claude.yaml | ${{ env.sed }} > ./data-lite/claude
           curl -sSL ${{ env.bm7Base }}/OpenAI/OpenAI.yaml | ${{ env.sed }} > ./data-lite/openai
           curl -sSL ${{ env.bm7Base }}/Gemini/Gemini.yaml | ${{ env.sed }} > ./data-lite/gemini
+
+          cat << EOF > ./data-lite/grok
+          x.ai
+          full:static.cloudflareinsights.com
+          full:challenges.cloudflare.com
+          full:use.typekit.net
+          full:grok.com
+          full:featureassets.org
+          full:auth.grok.com
+          EOF
           
           go run ./ --datapath=./data --outputname=tmp.dat --exportlists="category-dev"
           ${{ env.sed2 }} ./category-dev.txt > ./data-lite/developer
