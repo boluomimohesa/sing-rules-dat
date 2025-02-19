@@ -16,6 +16,12 @@ jobs:
           echo "BUILDTIME=$(TZ=Asia/Shanghai date +'%Y-%m-%d %H:%M')" >> $GITHUB_ENV
         shell: bash
         
+      - name: Checkout Mi
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            resouces
+
       - name: Checkout v2fly/domain-list-community
         uses: actions/checkout@v4
         with:
@@ -83,6 +89,9 @@ jobs:
           chmod 755 ./sing-box
           
           ./sing-box rule-set merge ./ai.json -c claude.json -c gemini.json -c openai.json -c grok.json
+
+          # 去重
+          ~/resouces/deduplicate_json.py -w -d ./ai.json
           
           # sudo apt-get install -y moreutils
           # jq  '.version = 2' ./ai.json | sponge ./ai.json
