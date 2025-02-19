@@ -92,8 +92,8 @@ jobs:
           ./sing-box rule-set merge ./ai.json -c claude.json -c gemini.json -c openai.json -c grok.json
 
           # 去重
-          chmod +x $GITHUB_WORKSPACE/resouces/deduplicate_json.py
-          $GITHUB_WORKSPACE/resouces/deduplicate_json.py -w -d ./ai.json
+          chmod +x resouces/deduplicate_json.py
+          python resouces/deduplicate_json.py -w -d ./ai.json
           # sudo apt-get install -y moreutils
           # jq  '.version = 2' ./ai.json | sponge ./ai.json
           jq  '.version = 2' ./ai.json > tmp.json && mv ./tmp.json ./ai.json
