@@ -188,12 +188,12 @@ def main() -> None:
     args = parse_arguments()
     setup_logging(args.log)
     
-    if not os.path.exists(args.input):
-        logging.error(f"输入文件 {args.input} 不存在")
-        raise FileNotFoundError(f"输入文件 {args.input} 不存在")
+    if not os.path.exists(args.file):
+        logging.error(f"输入文件 {args.file} 不存在")
+        raise FileNotFoundError(f"输入文件 {args.file} 不存在")
     
     try:
-        process_json(args.input, args.output, args.bak, args.write)
+        process_json(args.file, args.output, args.bak, args.write)
         logging.info("处理成功完成")
     except Exception as e:
         logging.error(f"发生错误: {str(e)}")
