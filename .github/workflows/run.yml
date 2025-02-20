@@ -84,7 +84,6 @@ jobs:
       - name: Merge ai file
         run: |
           cd sing-rule/bm7 || exit 1
-          ls -la $GITHUB_WORKSPACE
           wget -qO sing-box.tar.gz https://github.com/SagerNet/sing-box/releases/download/v1.11.1/sing-box-1.11.1-linux-amd64.tar.gz
           tar --strip-components=1 -xzf sing-box.tar.gz -C ./ --wildcards "*/sing-box"
           chmod 755 ./sing-box
@@ -92,8 +91,8 @@ jobs:
           ./sing-box rule-set merge ./ai.json -c claude.json -c gemini.json -c openai.json -c grok.json
 
           # 去重
-          chmod +x $GITHUB_WORKSPACE/resouces/deduplicate_json.py
-          python $GITHUB_WORKSPACE/resouces/deduplicate_json.py -w -d ./ai.json
+          chmod +x $GITHUB_WORKSPACE/resouces/dedup_json.py
+          python $GITHUB_WORKSPACE/resouces/dedup_json.py -f ./ai.json -w --bak=false
           # sudo apt-get install -y moreutils
           # jq  '.version = 2' ./ai.json | sponge ./ai.json
           jq  '.version = 2' ./ai.json > tmp.json && mv ./tmp.json ./ai.json
