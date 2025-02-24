@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "rules": [
+    {
+      "domain": [
+        "static.cloudflareinsights.com",
+        "challenges.cloudflare.com",
+        "use.typekit.net",
+        "grok.com",
+        "featureassets.org",
+        "auth.grok.com"
+      ],
+      "domain_suffix": "x.ai"
+    }
+  ]
+}
