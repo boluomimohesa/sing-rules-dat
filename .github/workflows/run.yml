@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           sparse-checkout: |
-            resouces
+            resources
 
       - name: Checkout v2fly/domain-list-community
         uses: actions/checkout@v4
@@ -53,10 +53,7 @@ jobs:
           mkdir -p data-lite
 
           wget https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geosite.dat
-          echo $GITHUB_WORKSPACE          
-          ls -la $GITHUB_WORKSPACE
           tools=$GITHUB_WORKSPACE/resources
-          ls -la $tools
           chmod +x $tools/geo
           chmod +x $tools/remove-domain-script.sh
 
