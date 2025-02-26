@@ -68,21 +68,20 @@ jobs:
           ${{ env.sed2 }} ./category-dev.txt > ./data-lite/developer
           ${{ env.sed2 }} ./category-ai-chat-!cn.txt > ./data-lite/ai
 
-          go run ./ --datapath=./data-lite --outputname=bm7.dat
-
+          go run ./ --datapath=./data-lite --outputname=geosite-lite.dat
       
 
-      - name: Convert bm7 to sing-rule-set
+      - name: Convert geo-lite to sing-rule-set
         run: |
-          mkdir -p sing-rule/bm7/geosite
+          mkdir -p sing-rule/geo-lite/geosite
           cd convert || exit 1
-          go run ./ geosite -f ../community/bm7.dat -o ../sing-rule/bm7/geosite -t sing-box
+          go run ./ geosite -f ../community/geosite-lite.dat -o ../sing-rule/geo-lite/geosite -t sing-box
 
-      - name: Convert bm7 to meta-rule-set
+      - name: Convert geo-lite to meta-rule-set
         run: |
-          mkdir -p meta-rule/bm7/geosite
+          mkdir -p meta-rule/geo-lite/geosite
           cd convert || exit 1
-          go run ./ geosite -f ../community/bm7.dat -o ../meta-rule/bm7/geosite
+          go run ./ geosite -f ../community/geosite-lite.dat -o ../meta-rule/geo-lite/geosite
           rm -rf ../community/*.dat
       
       # - name: Merge ai file
