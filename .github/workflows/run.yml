@@ -51,60 +51,65 @@ jobs:
           cd community || exit 1
           mkdir -p data-lite
 
-          curl -sSL ${{ env.bm7Base }}/Claude/Claude.yaml | ${{ env.sed }} > ./data-lite/claude
-          curl -sSL ${{ env.bm7Base }}/OpenAI/OpenAI.yaml | ${{ env.sed }} > ./data-lite/openai
-          curl -sSL ${{ env.bm7Base }}/Gemini/Gemini.yaml | ${{ env.sed }} > ./data-lite/gemini
+          # curl -sSL ${{ env.bm7Base }}/Claude/Claude.yaml | ${{ env.sed }} > ./data-lite/claude
+          # curl -sSL ${{ env.bm7Base }}/OpenAI/OpenAI.yaml | ${{ env.sed }} > ./data-lite/openai
+          # curl -sSL ${{ env.bm7Base }}/Gemini/Gemini.yaml | ${{ env.sed }} > ./data-lite/gemini
 
-          cat << EOF > ./data-lite/grok
-          x.ai
-          full:static.cloudflareinsights.com
-          full:challenges.cloudflare.com
-          full:use.typekit.net
-          full:grok.com
-          full:featureassets.org
-          full:auth.grok.com
-          EOF
+          # cat << EOF > ./data-lite/grok
+          # x.ai
+          # grok.com
+          # full:challenges.cloudflare.com
+          # full:use.typekit.net
+          # full:featureassets.org
+          # EOF
           
-          go run ./ --datapath=./data --outputname=tmp.dat --exportlists="category-dev"
+          go run ./ --datapath=./data --outputname=tmp.dat --exportlists='category-dev,category-ai-chat-!cn'
+
           ${{ env.sed2 }} ./category-dev.txt > ./data-lite/developer
+          ${{ env.sed2 }} ./category-ai-chat-!cn.txt > ./data-lite/ai
 
           go run ./ --datapath=./data-lite --outputname=bm7.dat
 
       
 
-      - name: Convert geo-lite to sing-rule-set
-        env:
-          NO_SKIP: true
+      - name: Convert bm7 to sing-rule-set
         run: |
-          mkdir -p sing-rule/bm7
+          mkdir -p sing-rule/bm7/geosite
           cd convert || exit 1
-          go run ./ geosite -f ../community/bm7.dat -o ../sing-rule/bm7 -t sing-box
+          go run ./ geosite -f ../community/bm7.dat -o ../sing-rule/bm7/geosite -t sing-box
+
+      - name: Convert bm7 to meta-rule-set
+        run: |
+          mkdir -p meta-rule/bm7/geosite
+          cd convert || exit 1
+          go run ./ geosite -f ../community/bm7.dat -o ../meta-rule/bm7/geosite
           rm -rf ../community/*.dat
       
-      - name: Merge ai file
-        run: |
-          cd sing-rule/bm7 || exit 1
-          wget -qO sing-box.tar.gz https://github.com/SagerNet/sing-box/releases/download/v1.11.1/sing-box-1.11.1-linux-amd64.tar.gz
-          tar --strip-components=1 -xzf sing-box.tar.gz -C ./ --wildcards "*/sing-box"
-          chmod 755 ./sing-box
+      # - name: Merge ai file
+      #   run: |
+      #     cd sing-rule/bm7/geosite || exit 1
+      #     wget -qO sing-box.tar.gz https://github.com/SagerNet/sing-box/releases/download/v1.11.1/sing-box-1.11.1-linux-amd64.tar.gz
+      #     tar --strip-components=1 -xzf sing-box.tar.gz -C ./ --wildcards "*/sing-box"
+      #     chmod 755 ./sing-box
           
-          ./sing-box rule-set merge ./ai.json -c claude.json -c gemini.json -c openai.json -c grok.json
+          # ./sing-box rule-set merge ./ai.json -c claude.json -c gemini.json -c openai.json -c grok.json
 
           # 去重
-          chmod +x $GITHUB_WORKSPACE/resouces/dedup_json.py
-          python $GITHUB_WORKSPACE/resouces/dedup_json.py -f ./ai.json -w --bak=false
+          # chmod +x $GITHUB_WORKSPACE/resouces/dedup_json.py
+          # python $GITHUB_WORKSPACE/resouces/dedup_json.py -f ./ai.json -w --bak=false
+
           # sudo apt-get install -y moreutils
           # jq  '.version = 2' ./ai.json | sponge ./ai.json
-          jq  '.version = 2' ./ai.json > tmp.json && mv ./tmp.json ./ai.json
-          
-          ./sing-box rule-set compile ./ai.json
 
-          rm -rf ./*linux-amd64.tar.gz ./sing-box*
+          # jq  '.version = 2' ./ai.json > tmp.json && mv ./tmp.json ./ai.json
+          
+          # ./sing-box rule-set compile ./ai.json
+
+          # rm -rf ./*linux-amd64.tar.gz ./sing-box*
       
       - name: Git push assets to "sing-rule" branch
         run: |
             cd sing-rule || exit 1
-            ls
             git init
             git config --local user.name "github-actions[bot]"
             git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -114,10 +119,27 @@ jobs:
             git remote add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
             git push -f -u origin sing
 
+      - name: Git push assets to "meta-rule" branch
+        run: |
+            cd meta-rule || exit 1
+            git init
+            git config --local user.name "github-actions[bot]"
+            git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git checkout -b meta
+            git add .
+            git commit -m "Released on ${{ env.BUILDTIME }}"
+            git remote add origin "https://${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}"
+            git push -f -u origin meta
+
       - name: Purge jsdelivr CDN
         run: |
           cd sing-rule || exit 1
           for file in $(ls); do
             curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@sing/${file}"
+          done
+
+          cd meta-rule || exit 1
+          for file in $(ls); do
+            curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@meta/${file}"
           done
             
