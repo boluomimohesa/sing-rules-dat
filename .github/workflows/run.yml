@@ -138,7 +138,7 @@ jobs:
             curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@sing/${file}"
           done
 
-          cd meta-rule || exit 1
+          cd ../meta-rule || exit 1
           for file in $(ls); do
             curl -i "https://purge.jsdelivr.net/gh/${{ github.repository }}@meta/${file}"
           done
