@@ -53,9 +53,11 @@ jobs:
           mkdir -p data-lite
 
           wget https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geosite.dat
-
+          echo $GITHUB_WORKSPACE          
           tools=$GITHUB_WORKSPACE/resources
-          chmod +x $tools/geo $tools/remove-domain-script.sh
+          ls -la $tools
+          chmod +x $tools/geo
+          chmod +x $tools/remove-domain-script.sh
 
           $tools/geo unpack site -c 'category-ai-chat-!cn,category-dev' --out-dir ./data-lite ./geosite.dat
         
