@@ -54,6 +54,7 @@ jobs:
 
           wget https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geosite.dat
           echo $GITHUB_WORKSPACE          
+          ls -la $GITHUB_WORKSPACE
           tools=$GITHUB_WORKSPACE/resources
           ls -la $tools
           chmod +x $tools/geo
