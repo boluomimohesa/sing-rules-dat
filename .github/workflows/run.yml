@@ -41,7 +41,6 @@ jobs:
         with:
           go-version: '1.22'
           cache-dependency-path: |
-            community/go.sum
             convert/go.sum
       
       - name: Build geosite-lite.dat file
@@ -57,7 +56,8 @@ jobs:
           tools=$GITHUB_WORKSPACE/resources
           chmod +x $tools/exportlists
 
-          $tools/exportlists --datapath="./data" --exportlists='cn,category-ai-chat-!cn,category-dev' outputpath='./data-lite'
+          $tools/exportlists --datapath="./data" --exportlists='cn,category-ai-chat-!cn,category-dev' --outputpath='./data-lite'
+          cat ./data-lite/category-ai-chat-!cn
         
           # curl -sSL ${{ env.bm7Base }}/Claude/Claude.yaml | ${{ env.sed }} > ./data-lite/claude
           # curl -sSL ${{ env.bm7Base }}/OpenAI/OpenAI.yaml | ${{ env.sed }} > ./data-lite/openai
