@@ -27,6 +27,8 @@ jobs:
         with:
           repository: v2fly/domain-list-community
           path: community
+          sparse-checkout: |
+            data
 
       - name: Checkout MetaCubeX/meta-rules-converter
         uses: actions/checkout@v4
@@ -52,17 +54,11 @@ jobs:
           cd community || exit 1
           mkdir -p data-lite
 
-          wget https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geosite.dat
           tools=$GITHUB_WORKSPACE/resources
-          chmod +x $tools/geo
-          chmod +x $tools/remove-domain-script.sh
+          chmod +x $tools/exportlists
 
-          $tools/geo unpack site -c 'category-ai-chat-!cn,category-dev' --out-dir ./data-lite ./geosite.dat
+          $tools/exportlists --datapath="./data" --exportlists='cn,category-ai-chat-!cn,category-dev' outputpath='./data-lite'
         
-          cat ./data-lite/category-ai-chat-!cn
-
-          $tools/remove-domain-script.sh ./data-lite
-
           # curl -sSL ${{ env.bm7Base }}/Claude/Claude.yaml | ${{ env.sed }} > ./data-lite/claude
           # curl -sSL ${{ env.bm7Base }}/OpenAI/OpenAI.yaml | ${{ env.sed }} > ./data-lite/openai
           # curl -sSL ${{ env.bm7Base }}/Gemini/Gemini.yaml | ${{ env.sed }} > ./data-lite/gemini
@@ -87,7 +83,7 @@ jobs:
         run: |
           mkdir -p sing-rule/geo-lite/geosite
           cd convert || exit 1
-          go run ./ geosite -f ../community/geosite-lite.dat -o ../sing-rule/geo-lite/geosite -t sing-box
+          go run ./ geosite -f ../community/geosite-lite.dat -o ../sing-rule/geo-lite/geosite
 
       # - name: Convert geo-lite to meta-rule-set
       #   run: |
