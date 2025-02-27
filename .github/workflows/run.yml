@@ -27,8 +27,6 @@ jobs:
         with:
           repository: v2fly/domain-list-community
           path: community
-          sparse-checkout: |
-            data
 
       - name: Checkout MetaCubeX/meta-rules-converter
         uses: actions/checkout@v4
@@ -42,6 +40,7 @@ jobs:
           go-version: '1.22'
           cache-dependency-path: |
             convert/go.sum
+            community/go.sum
       
       - name: Build geosite-lite.dat file
         env:
@@ -83,7 +82,7 @@ jobs:
         run: |
           mkdir -p sing-rule/geo-lite/geosite
           cd convert || exit 1
-          go run ./ geosite -f ../community/geosite-lite.dat -o ../sing-rule/geo-lite/geosite
+          go run ./ geosite -f ../community/geosite-lite.dat -o ../sing-rule/geo-lite/geosite -t sing-box
 
       # - name: Convert geo-lite to meta-rule-set
       #   run: |
